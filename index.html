@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <link rel="icon" type="image/x-incon" href="./favicon.ico">
     <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
     <link rel="stylesheet" href="style.css" />
     <script type="importmap">
@@ -20,6 +21,7 @@
   <body>
     <canvas id="render"></canvas>
     <div id="terminal"></div>
-    <script type="module" src="terminal.js"></script>
+    <script src="terminalColors.js"></script>
+    <script type="module" src="terminal.js" defer></script>
   </body>
 </html>

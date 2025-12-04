@@ -1,8 +1,12 @@
 import { dialogue } from "3D";
 
 // Create terminal
-const term = new Terminal({
-  cursorBlink: true
+export const term = new Terminal({
+  cursorBlink: true,
+  theme : {
+    background : '#1e1f1e',
+    foreground: '#48D462',
+  }
 });
 
 function writeAndTTS(str) {
@@ -29,7 +33,8 @@ const prompt = () => {
   term.write("\r\n$ ");
 };
 
-writeAndTTS("welcome to NIRD OS!\r\nWrite 'help' to see the commands available \r\n");
+termInitText(term); // Texte de bienvenue
+writeAndTTS(" Write 'help' to see the available commands\r\n");
 prompt();
 
 // command history
@@ -45,7 +50,7 @@ term.onKey(e => {
 // ENTER
 if (code === 13) {
   const cmd = curr_line.trim();
-  if (cmd) {
+  if (cmd != "") {
     bash_history.push(cmd);
     history_index = bash_history.length;
   }
@@ -90,6 +95,19 @@ function redrawLine(text) {
     curr_line += key;
     term.write(key);
   }
+
+  // F5 Key
+  if (code === 116) {
+    location.reload();
+    return;
+  }
+
+  // CTRL + L (clear)
+  if (code === 76 && e.domEvent.ctrlKey) {
+    term.clear();
+    prompt();
+    return;
+  }
 });
 
 // Command handler
@@ -111,10 +129,26 @@ function handleCommand(cmd) {
 
   } else if (cmd.match(/D/)){
     cmdD();
-  } else {
+  } else if (cmd.match(/color/)) {
+    changeColor(cmd, term);
+  }
+  
+  // Useless stuff
+  else if (cmd === "neofetch") {
+    term.write("\r\n")
+    displayTermName(term);
+  } 
+
+  else if (cmd === "reload") {
+    location.reload();
+  }
+  
+  // Default answer (cmd not matched)
+  else {
     writeAndTTS(`${cmd}: command not found`);
 
-  }
+    writeAndTTS(formatHelp());
+  } 
 
   term.write("\r\n");
 }
@@ -133,4 +167,11 @@ function cmdR(){
 }
 function cmdD(){
   writeAndTTS("Durability: \r\n The NIRD aproach is ")
+}
+
+function formatHelp() {
+  return "\r\nAvailable commands:\r\n" +
+   " - help : show this message\r\n" +
+   " - clear : clear the terminal\r\n" +
+   " - color [a-f]: changes the color"
 }
