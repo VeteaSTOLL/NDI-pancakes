@@ -22,30 +22,61 @@ const prompt = () => {
   term.write("\r\n$ ");
 };
 
-term.write(" Write 'help' to see the commands available \r\n");
+term.write("welcome to NIRD OS!\r\nWrite 'help' to see the commands available \r\n");
 prompt();
+
+// command history
+var bash_history=[]
+var history_index=0
+
 
 // Handle key presses
 term.onKey(e => {
   const key = e.key;
   const code = e.domEvent.keyCode;
 
-  // ENTER
-  if (code === 13) {
-    handleCommand(curr_line.trim());
-    curr_line = "";
-    prompt();
-    return;
+// ENTER
+if (code === 13) {
+  const cmd = curr_line.trim();
+  if (cmd) {
+    bash_history.push(cmd);
+    history_index = bash_history.length;
   }
+  handleCommand(cmd);
+  curr_line = "";
+  prompt();
+  return;
+}
 
-  // BACKSPACE
-  if (code === 8) {
-    if (curr_line.length > 0) {
-      curr_line = curr_line.slice(0, -1);
-      term.write("\b \b");
-    }
-    return;
+// BACKSPACE
+if (code === 8) {
+  if (curr_line.length > 0) {
+    curr_line = curr_line.slice(0, -1);
+    term.write("\b \b");
   }
+  return;
+}
+
+// UP ARROW
+if (code === 38) {
+  if (history_index > 0) history_index--;
+  curr_line = bash_history[history_index] || "";
+  redrawLine(curr_line);
+  return;
+}
+
+// DOWN ARROW
+if (code === 40) {
+  if (history_index < bash_history.length - 1) history_index++;
+  curr_line = bash_history[history_index] || "";
+  redrawLine(curr_line);
+  return;
+}
+
+function redrawLine(text) {
+  term.write("\x1b[2K\r$ "); // clear line + show prompt
+  term.write(text);
+}
 
   // Printable characters
   if (key.length === 1) {
@@ -56,13 +87,29 @@ term.onKey(e => {
 
 // Command handler
 function handleCommand(cmd) {
+  term.write("\r\n");
+  
   if (cmd === "") return;
 
   if (cmd === "help") {
-    term.write("\r\nAvailable commands:\r\n - help : show this help\r\n - clear : clear the terminal\r\n");
+    term.write("Available commands:\r\n - help : show this help\r\n - clear : clear the terminal");
+
   } else if (cmd === "clear") {
     term.clear();
-  } else {
-    term.write(`\r\n${cmd}: command not found\r\n`);
+
+  } else if (cmd === "Ni") {
+    term.write("Inclusive Computer Science :\r\n NIRD operates for more inclusive Computer Science. In an era of structural dependency towards Big Tech such as Windows, the educational system is facing more and more trials : built-in obsolecence, subscription locked products, etc... The NIRD aproach vows to fight for technological autonomy, especialy for educational teams.")
+  } else if (cmd === "R") {
+    term.write("Responsible : \r\n The NIRD aproch ");
+  } else if (cmd === ""){
+
   }
+  
+  
+  
+  else {
+    term.write(`${cmd}: command not found`);
+  }
+
+  term.write("\r\n");
 }
