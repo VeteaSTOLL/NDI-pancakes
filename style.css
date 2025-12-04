@@ -1,0 +1,36 @@
+
+
+#chatbot{
+    color: rgb(1, 213, 1);
+    font-family: monospace;
+    font-size: 1vw;
+}
+
+#user{
+    color: white;
+    font-family: monospace;
+    font-size: 1vw;
+}
+
+#titre{
+    color:red;
+    font-family: monospace;
+}
+
+#fond
+{
+    background-color: black;
+}
+
+canvas{
+    border: solid white 3px;
+    position: absolute;
+    right: 2vw;
+    top: 2vw;
+    width: 35vw;
+    height: 35vw;
+}
+
+#contenu-textuel{
+    padding: 1vw;
+}
