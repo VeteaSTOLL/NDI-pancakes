@@ -1,36 +1,14 @@
 <!doctype html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <title>Titre de la page</title>
-    <link rel="stylesheet" href="style.css">
+<html>
+  <head>
+    <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="node_modules/@xterm/xterm/lib/xterm.js"></script>
+    <script src="node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+  </head>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "./three.module.js",
-                "three/addons/": "./jsm/"
-            }
-        }
-    </script>
-    <script type="module" src="3D.js"></script>
-</head>
-<body id="fond">
-    <h1 id="titre">Chat J'ai pété</h1>
-    <div id="contenu-textuel">
-        <p id="chatbot">
-            Bonjour, je suis ton chatbot préféré. Que veux tu faire ?
-        </p>
-        <p id="user">
-            Mec parle moi des loutres !
-        </p>
-        <p id="chatbot">
-            Pour faire un burger à la loutre, commencer par découper la loutre !
-        </p>
-        <p id="user">
-            Hein ?!?
-        </p>
-    </div>
-    <canvas id="render"></canvas>
-</body>
+  <body>
+    <div id="terminal"></div>
+    <script src="terminal.js"></script>
+  </body>
 </html>
