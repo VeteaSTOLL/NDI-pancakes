@@ -1,6 +1,6 @@
 var DEBUG = true; // Useless for now
 
-function changeColor(cmd) {
+function changeColor(cmd, term) {
 
     let regex = /color ([a-z])/
     let match = cmd.match(regex)
@@ -53,7 +53,7 @@ function changeColor(cmd) {
     return;
 }
 
-function initStyle() {
+function initStyle(term) {
     term.options.theme = {
         background : '#1e1f1e',
         foreground: '#48D462',
@@ -64,7 +64,7 @@ function initStyle() {
 /**
  * "neofetch"
  */
-function displayTermName() {
+function displayTermName(term) {
     term.write(
         "\r\n" +
         "\t $$\\   $$\\ $$$$$$\\ $$$$$$$\\  $$$$$$$\\   \r\n" +
@@ -82,6 +82,6 @@ function displayTermName() {
 /**
  * Initialises the terminal at startup/reload
  */
-function termInitText() {
-    displayTermName();
+function termInitText(term) {
+    displayTermName(term);
 }
