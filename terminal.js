@@ -26,7 +26,7 @@ const prompt = () => {
   term.write("\r\n$ ");
 };
 
-termInitText();
+termInitText(); // Texte de bienvenue
 term.write(" Write 'help' to see the available commands\r\n");
 prompt();
 
