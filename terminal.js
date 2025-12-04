@@ -1,3 +1,9 @@
+const TerminalStates = {
+  DEFAULT: "",
+  HUBERT: "hubert"
+};
+
+
 // Create terminal
 const term = new Terminal({
   cursorBlink: true
@@ -17,9 +23,16 @@ window.addEventListener("resize", () => fitAddon.fit());
 // Current line buffer
 let curr_line = "";
 
+// Current terminal state
+let terminalState = "";
+
 // Display initial prompt
 const prompt = () => {
-  term.write("\r\n$ ");
+  if (terminalState === TerminalStates.HUBERT) {
+    term.write("\r\n🦖  ");
+  } else {
+    term.write("\r\n$ ");
+  }
 };
 
 term.write(" Write 'help' to see the commands available \r\n");
@@ -32,7 +45,11 @@ term.onKey(e => {
 
   // ENTER
   if (code === 13) {
-    handleCommand(curr_line.trim());
+    if (terminalState === TerminalStates.HUBERT) {
+      handleCommandHubert(curr_line.trim());
+    } else {
+      handleCommand(curr_line.trim());
+    }
     curr_line = "";
     prompt();
     return;
@@ -62,7 +79,23 @@ function handleCommand(cmd) {
     term.write("\r\nAvailable commands:\r\n - help : show this help\r\n - clear : clear the terminal\r\n");
   } else if (cmd === "clear") {
     term.clear();
+  } else if (cmd === "hubert") {
+    // Message d'aide
+    term.write("\r\n enter \"exit\" to quit hubert")
+
+    // Change l'état du terminal en mode hubert
+    terminalState = TerminalStates.HUBERT;
   } else {
     term.write(`\r\n${cmd}: command not found\r\n`);
+  }
+}
+
+function handleCommandHubert(cmd) {
+  if (cmd === "") return;
+
+  console.log(cmd);
+  // Envoie du prompt à l'IA
+  if (cmd === "exit") {
+    terminalState = TerminalStates.DEFAULT;
   }
 }
