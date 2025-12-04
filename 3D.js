@@ -11,15 +11,24 @@ let talking = false;
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         talking = true;
-    }
-});
 
-document.addEventListener('keyup', (e) => {
-    if (e.code === 'Space') {
-        talking = false;
-        if (trex) {
-            trex.rotation.x = 0;
-        }
+        const text = "Bonjour, comment ça va ?"; // placeholder
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        utterance.lang = 'fr-FR'; // Langue française
+        utterance.pitch = 0.5;      // Hauteur de la voix (0 à 2)
+        utterance.rate = 1;       // Vitesse de lecture (0.1 à 10)
+        utterance.volume = 1;     // Volume (0 à 1)
+
+        utterance.onend = () => {
+            talking = false;
+            if (trex) {
+                trex.rotation.x = 0;
+            }
+        };
+
+        window.speechSynthesis.speak(utterance);
     }
 });
 
