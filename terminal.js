@@ -1,5 +1,11 @@
 import { dialogue } from "3D";
 
+const TerminalStates = {
+  DEFAULT: "",
+  HUBERT: "hubert"
+};
+
+
 // Create terminal
 export const term = new Terminal({
   cursorBlink: true,
@@ -28,9 +34,16 @@ window.addEventListener("resize", () => fitAddon.fit());
 // Current line buffer
 let curr_line = "";
 
+// Current terminal state
+let terminalState = "";
+
 // Display initial prompt
 const prompt = () => {
-  term.write("\r\n$ ");
+  if (terminalState === TerminalStates.HUBERT) {
+    term.write("\r\n🦖  ");
+  } else {
+    term.write("\r\n$ ");
+  }
 };
 
 termInitText(term); // Texte de bienvenue
@@ -53,8 +66,13 @@ if (code === 13) {
   if (cmd != "") {
     bash_history.push(cmd);
     history_index = bash_history.length;
+
+    if (terminalState === TerminalStates.HUBERT) {
+      handleCommandHubert(cmd);
+    } else {
+      handleCommand(cmd);
+    }
   }
-  handleCommand(cmd);
   curr_line = "";
   prompt();
   return;
@@ -131,6 +149,12 @@ function handleCommand(cmd) {
     cmdD();
   } else if (cmd.match(/color/)) {
     changeColor(cmd, term);
+  } else if (cmd === "hubert") {
+    // Message d'aide
+    writeAndTTS("\r\n enter \"exit\" to quit hubert")
+
+    // Change l'état du terminal en mode hubert
+    terminalState = TerminalStates.HUBERT;
   }
   
   // Useless stuff
@@ -174,4 +198,13 @@ function formatHelp() {
    " - help : show this message\r\n" +
    " - clear : clear the terminal\r\n" +
    " - color [a-f]: changes the color"
+}
+function handleCommandHubert(cmd) {
+  if (cmd === "") return;
+
+  console.log(cmd);
+  // Envoie du prompt à l'IA
+  if (cmd === "exit") {
+    terminalState = TerminalStates.DEFAULT;
+  }
 }
