@@ -1,7 +1,14 @@
+import { dialogue } from "3D";
+
 // Create terminal
 const term = new Terminal({
   cursorBlink: true
 });
+
+function writeAndTTS(str) {
+  term.write(str);
+  dialogue(str);
+}
 
 // Add the fit addon
 const fitAddon = new FitAddon.FitAddon();
@@ -22,7 +29,7 @@ const prompt = () => {
   term.write("\r\n$ ");
 };
 
-term.write(" Write 'help' to see the commands available \r\n");
+writeAndTTS(" Write 'help' to see the commands available \r\n");
 prompt();
 
 // Handle key presses
@@ -59,10 +66,10 @@ function handleCommand(cmd) {
   if (cmd === "") return;
 
   if (cmd === "help") {
-    term.write("\r\nAvailable commands:\r\n - help : show this help\r\n - clear : clear the terminal\r\n");
+    writeAndTTS("\r\nAvailable commands:\r\n - help : show this help\r\n - clear : clear the terminal\r\n");
   } else if (cmd === "clear") {
     term.clear();
   } else {
-    term.write(`\r\n${cmd}: command not found\r\n`);
+    writeAndTTS(`\r\n${cmd}: command not found\r\n`);
   }
 }

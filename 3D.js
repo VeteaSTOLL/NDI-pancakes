@@ -8,7 +8,7 @@ let trex;
 
 let talking = false;
 
-function dialogue(text) {
+export function dialogue(text) {
     talking = true;
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -27,7 +27,7 @@ function dialogue(text) {
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
-        dialogue("Bonjour, comment ça va ?"); // placeholder
+        dialogue("J'adore les pancakes"); // placeholder
     }
 });
 

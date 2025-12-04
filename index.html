@@ -7,7 +7,8 @@
         {
             "imports": {
                 "three": "./three.module.js",
-                "three/addons/": "./jsm/"
+                "three/addons/": "./jsm/",
+                "3D": "./3D.js"
             }
         }
     </script>
@@ -19,6 +20,6 @@
   <body>
     <canvas id="render"></canvas>
     <div id="terminal"></div>
-    <script src="terminal.js"></script>
+    <script type="module" src="terminal.js"></script>
   </body>
 </html>
