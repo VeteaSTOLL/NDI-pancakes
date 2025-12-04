@@ -1,7 +1,24 @@
+import { dialogue } from "3D";
+
+const TerminalStates = {
+  DEFAULT: "",
+  HUBERT: "hubert"
+};
+
+
 // Create terminal
-const term = new Terminal({
-  cursorBlink: true
+export const term = new Terminal({
+  cursorBlink: true,
+  theme : {
+    background : '#1e1f1e',
+    foreground: '#48D462',
+  }
 });
+
+function writeAndTTS(str) {
+  term.write(str);
+  dialogue(str);
+}
 
 // Add the fit addon
 const fitAddon = new FitAddon.FitAddon();
@@ -17,12 +34,20 @@ window.addEventListener("resize", () => fitAddon.fit());
 // Current line buffer
 let curr_line = "";
 
+// Current terminal state
+let terminalState = "";
+
 // Display initial prompt
 const prompt = () => {
-  term.write("\r\n$ ");
+  if (terminalState === TerminalStates.HUBERT) {
+    term.write("\r\n🦖  ");
+  } else {
+    term.write("\r\n$ ");
+  }
 };
 
-term.write("welcome to NIRD OS!\r\nWrite 'help' to see the commands available \r\n");
+termInitText(term); // Texte de bienvenue
+writeAndTTS(" Write 'help' to see the available commands\r\n");
 prompt();
 
 // command history
@@ -38,11 +63,16 @@ term.onKey(e => {
 // ENTER
 if (code === 13) {
   const cmd = curr_line.trim();
-  if (cmd) {
+  if (cmd != "") {
     bash_history.push(cmd);
     history_index = bash_history.length;
+
+    if (terminalState === TerminalStates.HUBERT) {
+      handleCommandHubert(cmd);
+    } else {
+      handleCommand(cmd);
+    }
   }
-  handleCommand(cmd);
   curr_line = "";
   prompt();
   return;
@@ -75,13 +105,26 @@ if (code === 40) {
 
 function redrawLine(text) {
   term.write("\x1b[2K\r$ "); // clear line + show prompt
-  term.write(text);
+  writeAndTTS(text);
 }
 
   // Printable characters
   if (key.length === 1) {
     curr_line += key;
     term.write(key);
+  }
+
+  // F5 Key
+  if (code === 116) {
+    location.reload();
+    return;
+  }
+
+  // CTRL + L (clear)
+  if (code === 76 && e.domEvent.ctrlKey) {
+    term.clear();
+    prompt();
+    return;
   }
 });
 
@@ -104,10 +147,64 @@ function handleCommand(cmd) {
 
   } else if (cmd.match(/D/)){
     cmdD();
-  } else {
-    term.write(`${cmd}: command not found`);
+  } else if (cmd.match(/color/)) {
+    changeColor(cmd, term);
+  } else if (cmd === "hubert") {
+    // Message d'aide
+    writeAndTTS("\r\n enter \"exit\" to quit hubert")
 
+    // Change l'état du terminal en mode hubert
+    terminalState = TerminalStates.HUBERT;
   }
+  
+  // Useless stuff
+  else if (cmd === "neofetch") {
+    term.write("\r\n")
+    displayTermName(term);
+  } 
+
+  else if (cmd === "reload") {
+    location.reload();
+  }
+  
+  // Default answer (cmd not matched)
+  else {
+    writeAndTTS(`${cmd}: command not found`);
+
+    writeAndTTS(formatHelp());
+  } 
 
   term.write("\r\n");
+}
+
+
+function cmdHelp(){
+  writeAndTTS("Available commands:\r\n - help : show this help\r\n - clear : clear the terminal");
+}
+
+function cmdNi(){
+  writeAndTTS("Inclusive Computer Science :\r\n NIRD operates for more inclusive Computer Science. In an era of structural dependency towards Big Tech such as Windows, the educational system is facing more and more trials : built-in obsolecence, subscription locked products, etc... The NIRD aproach vows to fight for technological autonomy, especialy for educational teams.");
+}
+
+function cmdR(){
+  writeAndTTS("Responsible : \r\n The NIRD aproach promotes a reasoned process when it comes to technology. In a world of constant inovation, we greatlly value data privacy and co-creation. We first and furmost connect teachers with each others, via a Tchap forum, encouraging them to exchange teaching materials and raise awarness amongst managment teams. One of our other bigest mission is to spread Open Source resources. That is why we deploy computers equiped with Linux.");
+}
+function cmdD(){
+  writeAndTTS("Durability: \r\n The NIRD aproach is ")
+}
+
+function formatHelp() {
+  return "\r\nAvailable commands:\r\n" +
+   " - help : show this message\r\n" +
+   " - clear : clear the terminal\r\n" +
+   " - color [a-f]: changes the color"
+}
+function handleCommandHubert(cmd) {
+  if (cmd === "") return;
+
+  console.log(cmd);
+  // Envoie du prompt à l'IA
+  if (cmd === "exit") {
+    terminalState = TerminalStates.DEFAULT;
+  }
 }

@@ -1,15 +1,27 @@
 <!doctype html>
 <html>
   <head>
+    <link rel="icon" type="image/x-incon" href="./favicon.ico">
     <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
     <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./three.module.js",
+                "three/addons/": "./jsm/",
+                "3D": "./3D.js"
+            }
+        }
+    </script>
+    <script type="module" src="3D.js"></script>
     <script src="node_modules/@xterm/xterm/lib/xterm.js"></script>
     <script src="node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
   </head>
 
   <body>
+    <canvas id="render"></canvas>
     <div id="terminal"></div>
-    <script src="terminal.js"></script>
-    <script src="termialCommands.js"></script>
+    <script src="terminalColors.js"></script>
+    <script type="module" src="terminal.js" defer></script>
   </body>
 </html>
