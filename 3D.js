@@ -92,7 +92,7 @@ function init() {
     );
 
 
-    renderer = new THREE.WebGLRenderer( { canvas, antialias: true } );
+    renderer = new THREE.WebGLRenderer( { canvas, alpha:true, antialias: true } );
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
 
