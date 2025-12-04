@@ -9,7 +9,6 @@ let trex;
 let talking = false;
 
 export function dialogue(text) {
-    talking = true;
 
     const utterance = new SpeechSynthesisUtterance(text);
 
@@ -18,18 +17,15 @@ export function dialogue(text) {
     utterance.rate = 1;       // Vitesse de lecture (0.1 à 10)
     utterance.volume = 1;     // Volume (0 à 1)
 
+    utterance.onstart = () => {
+        talking = true;
+    };
     utterance.onend = () => {
         talking = false;
     };
 
     window.speechSynthesis.speak(utterance);
 }
-
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        dialogue("J'adore les pancakes"); // placeholder
-    }
-});
 
 let mx;
 let my;
