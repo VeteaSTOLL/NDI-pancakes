@@ -1,10 +1,19 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Titre de la page</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+    <meta charset="utf-8">
+    <title>Titre de la page</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./three.module.js",
+                "three/addons/": "./jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="3D.js"></script>
 </head>
 <body id="fond">
     <h1 id="titre">Chat J'ai pété</h1>
@@ -22,6 +31,6 @@
             Hein ?!?
         </p>
     </div>
-    <canvas></canvas>
+    <canvas id="render"></canvas>
 </body>
 </html>
