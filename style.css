@@ -9,3 +9,12 @@ html, body {
   height: 100%;
   width: 100%;
 }
+
+#render {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  height: 300px;
+  z-index: 1000;
+}
