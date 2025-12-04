@@ -35,6 +35,8 @@ term.onKey(e => {
   const key = e.key;
   const code = e.domEvent.keyCode;
 
+  console.log(e)
+
   // ENTER
   if (code === 13) {
     handleCommand(curr_line.trim());
@@ -63,6 +65,13 @@ term.onKey(e => {
     location.reload();
     return;
   }
+
+  // CTRL + L (clear)
+  if (code === 76 && e.domEvent.ctrlKey) {
+    term.clear();
+    prompt();
+    return;
+  }
 });
 
 // Command handler
@@ -75,7 +84,20 @@ function handleCommand(cmd) {
     term.clear();
   } else if (cmd.match(/color/)) {
     changeColor(cmd);
-  } else {
+  }
+  
+  // Useless stuff
+  else if (cmd === "neofetch") {
+    term.write("\r\n")
+    displayTermName();
+  } 
+
+  else if (cmd === "reload") {
+    location.reload();
+  }
+  
+  // Default answer (cmd not matched)
+  else {
     term.write(`\r\n${cmd}: command not found\r\n`);
   }
 }

@@ -60,6 +60,10 @@ function initStyle() {
     }
 }
 
+
+/**
+ * "neofetch"
+ */
 function displayTermName() {
     term.write(
         "\r\n" +
@@ -75,6 +79,9 @@ function displayTermName() {
     )
 }
 
+/**
+ * Initialises the terminal at startup/reload
+ */
 function termInitText() {
     displayTermName();
 }
