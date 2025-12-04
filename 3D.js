@@ -5,8 +5,8 @@ const canvas = document.getElementById("render");
 let camera, scene, renderer;
 let distance = 300;
 let trex;
-let talking = false;
 
+let talking = false;
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
@@ -22,6 +22,26 @@ document.addEventListener('keyup', (e) => {
         }
     }
 });
+
+let mx;
+let my;
+
+document.addEventListener("mousemove", (event) => {
+    const rect = canvas.getBoundingClientRect();
+
+    // Centre de l'élément
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Position relative au centre
+    const x = event.clientX - centerX;
+    const y = event.clientY - centerY;
+
+    // Normalisation par la taille de l'écran
+    mx = x / window.innerWidth;
+    my = y / window.innerHeight;
+});
+
 
 init();
 animate();
@@ -98,12 +118,17 @@ function render() {
     // camera.lookAt( scene.position );
     // shader.uniforms.cameraPos.value = camera.position;
 
-    if (trex && talking) {
-        let fq = 100;
-        let amp = 0.25;
-        // trex.scale.set(2, 2+Math.cos(timer*fq)*amp,2);
+    if (trex) {
+        trex.rotation.y = mx
+        trex.rotation.x = my
 
-        trex.rotation.x = Math.cos(timer*fq)*amp;
+        if (talking) {
+            let fq = 100;
+            let amp = 0.25;
+            // trex.scale.set(2, 2+Math.cos(timer*fq)*amp,2);
+
+            trex.rotation.x = my + Math.cos(timer*fq)*amp;
+        }
     }
 
     renderer.render( scene, camera );
