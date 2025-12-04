@@ -4,10 +4,24 @@ function changeColor(cmd) {
     let letter = match[1];
 
     switch (letter) {
-        case  {
+        case "a": {
+            
+        } case "b": {
+
+        } case "c": {
+
+        } case "d": {
+
+        } case "e": {
+
+        } case "f": {
 
         }
     }
 
     return;
+}
+
+function initStyle() {
+
 }

@@ -69,7 +69,7 @@ function handleCommand(cmd) {
   if (cmd === "") return;
 
   if (cmd === "help") {
-    term.write("\r\nAvailable commands:\r\n - help : show this help\r\n - clear : clear the terminal\r\n");
+    term.write(formatHelp());
   } else if (cmd === "clear") {
     term.clear();
   } else if (cmd.match(/color/)) {
@@ -77,4 +77,11 @@ function handleCommand(cmd) {
   } else {
     term.write(`\r\n${cmd}: command not found\r\n`);
   }
+}
+
+function formatHelp() {
+  return "\r\nAvailable commands:\r\n" +
+   " - help : show this message\r\n" +
+   " - clear : clear the terminal\r\n" +
+   " - color [a-f]: changes the color"
 }
