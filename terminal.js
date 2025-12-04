@@ -1,6 +1,10 @@
 // Create terminal
 const term = new Terminal({
-  cursorBlink: true
+  cursorBlink: true,
+  theme : {
+    background : '#1e1f1eff',
+    foreground: '#48D462',
+  }
 });
 
 // Add the fit addon
@@ -52,6 +56,12 @@ term.onKey(e => {
     curr_line += key;
     term.write(key);
   }
+
+  // F5 Key
+  if (code === 116) {
+    location.reload();
+    return;
+  }
 });
 
 // Command handler
@@ -62,6 +72,8 @@ function handleCommand(cmd) {
     term.write("\r\nAvailable commands:\r\n - help : show this help\r\n - clear : clear the terminal\r\n");
   } else if (cmd === "clear") {
     term.clear();
+  } else if (cmd.match(/color/)) {
+    changeColor(cmd);
   } else {
     term.write(`\r\n${cmd}: command not found\r\n`);
   }
