@@ -1,21 +1,52 @@
+var DEBUG = true; // Useless for now
+
 function changeColor(cmd) {
+
     let regex = /color ([a-z])/
     let match = cmd.match(regex)
     let letter = match[1];
 
     switch (letter) {
         case "a": {
-            
+            term.options.theme = {    
+                background : '#1e1f1e',
+                foreground: '#48D462'
+            };
+            break;
         } case "b": {
-
+            term.options.theme = {
+                background : '#1e1f1e',
+                foreground: '#48C1D4'
+            };
+            break;
         } case "c": {
-
+            term.options.theme = {
+                background : '#1e1f1e',
+                foreground: '#4864D4'
+            };
+            break;
         } case "d": {
-
+            term.options.theme = {
+                background : '#1e1f1e',
+                foreground: '#B25CED'
+            };
+            break;
         } case "e": {
-
+            term.options.theme = {
+                background : '#1e1f1e',
+                foreground: '#ED5C5C'
+            };
+            break;
         } case "f": {
-
+            term.options.theme = {
+                background : '#1e1f1e',
+                foreground: '#EDC45C'
+            };
+            break;
+        } default: {
+            term.write("\r\nInvalid Choice.\r\n" + 
+                "Syntax: color [a-z]");
+            break;
         }
     }
 
@@ -23,5 +54,8 @@ function changeColor(cmd) {
 }
 
 function initStyle() {
-
+    term.options.theme = {
+        background : '#1e1f1e',
+        foreground: '#48D462',
+    }
 }

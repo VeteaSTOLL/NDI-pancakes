@@ -2,7 +2,7 @@
 const term = new Terminal({
   cursorBlink: true,
   theme : {
-    background : '#1e1f1eff',
+    background : '#1e1f1e',
     foreground: '#48D462',
   }
 });
@@ -26,7 +26,8 @@ const prompt = () => {
   term.write("\r\n$ ");
 };
 
-term.write(" Write 'help' to see the commands available \r\n");
+termInitText();
+term.write(" Write 'help' to see the available commands\r\n");
 prompt();
 
 // Handle key presses
