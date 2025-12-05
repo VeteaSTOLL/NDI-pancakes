@@ -190,11 +190,11 @@ function handleCommand(cmd) {
     // <script src="termialCommands.js"></script>
 
 function cmdNi(){
-  writeAndTTS("Inclusive Computer Science :\r\n NIRD operates for more inclusive Computer Science. In an era of structural dependency towards Big Tech such as Windows, the educational system is facing more and more trials : built-in obsolecence, subscription locked products, etc... The NIRD aproach vows to fight for technological autonomy, especialy for educational teams.");
+  writeAndTTS("Inclusive Computer Science :\r\n NIRD operates for more inclusive Computer Science. In an era of structural dependency towards Big Tech such as Windows, the educational system is facing more and more trials : built-in obsolescence, subscription-locked products, etc... The NIRD approach vows to fight for technological autonomy, especially for educational teams.");
 }
 
 function cmdR(){
-  writeAndTTS("Responsible : \r\n The NIRD aproach promotes a reasoned process when it comes to technology. In a world of constant inovation, we greatlly value data privacy and co-creation. We first and furmost connect teachers with each others, via a Tchap forum, encouraging them to exchange teaching materials and raise awarness amongst managment teams. One of our other bigest mission is to spread Open Source resources. That is why we deploy computers equiped with Linux.");
+  writeAndTTS("Responsible : \r\n The NIRD approach promotes a reasoned process when it comes to technology. In a world of constant innovation, we greatly value data privacy and co-creation. We first and formost connect teachers with each other, via a Tchap forum, encouraging them to exchange teaching materials and raise awareness among management teams. One of our other biggest missions is to spread Open Source resources. That is why we deploy computers equipped with Linux.");
 }
 function cmdD(){
   writeAndTTS("Durability: (Sustainability) \r\n reconditioning and combating obsolescence by repackaging obsolete computers (replacement of components, reinstallation via lightweight systems, etc.), NIRD extends the lifespan of the equipment, avoiding waste and the ecological footprint of frequent renewal. This also allows schools, often constrained by tight budgets, to equip their computer parks economically while respecting ecological principles. ")
