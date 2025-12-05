@@ -9,11 +9,9 @@ const TerminalStates = {
 // Create terminal
 export const term = new Terminal({
   cursorBlink: true,
-  theme : {
-    background : '#1e1f1e',
-    foreground: '#48D462',
-  }
 });
+
+initStyle(term);
 
 function writeAndTTS(str) {
   term.write(str);
@@ -136,6 +134,7 @@ function handleCommand(cmd) {
 
   if (cmd === "help") {
     cmdHelp();
+
   } else if (cmd.match(/clear/)) {
     term.clear();
 
@@ -151,6 +150,7 @@ function handleCommand(cmd) {
     cmdD();
   } else if (cmd.match(/color/)) {
     changeColor(cmd, term);
+
   } else if (cmd === "hubert") {
     // Message d'aide
     writeAndTTS("\r\n enter \"exit\" to quit hubert")
@@ -181,7 +181,7 @@ function handleCommand(cmd) {
 
 
 function cmdHelp(){
-  writeAndTTS("Available commands:\r\n - help : show this help\r\n - clear : clear the terminal");
+  writeAndTTS(formatHelp());
 }
 
 function cmdNi(){
@@ -200,8 +200,12 @@ function formatHelp() {
    " - help : show this message\r\n" +
    " - clear : clear the terminal\r\n" +
    " - music : play some music\r\n" +
-   " - color [a-f]: changes the color"
+   " - color [a-f]: changes the color [green, lightBlue, white-ish, mauve, red, gold]\r\n" +
+   " - Ni\r\n" +
+   " - R\r\n" +
+   " - D\r\n"
 }
+
 function handleCommandHubert(cmd) {
   if (cmd === "") return;
 
