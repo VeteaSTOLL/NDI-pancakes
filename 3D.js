@@ -12,6 +12,7 @@ let talking = false;
 // VARIABLES DE JEU
 
 let inGame = false
+let gameOver = false
 let velocityY = 0;
 const gravity = -0.6;
 const jumpForce = 12;
@@ -28,7 +29,8 @@ document.addEventListener("keydown", (e) => {
 // LES cacTYS
 
 let limitX = -225
-let velocityX = -3
+let velocityX = -5
+
 
 
 
@@ -74,6 +76,18 @@ document.addEventListener("mousemove", (event) => {
 init();
 animate();
 
+function place_trex()
+{
+                    trex.position.set(0, 0, 0)
+                    trex.scale.set(2,2,2);
+}
+
+function place_cactus()
+{
+                    cactus.position.set(100, -15, 0)
+                    cactus.scale.set(0.2,0.2,0.2);
+}
+
 function init() {
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
     camera.position.y = 20;
@@ -100,8 +114,7 @@ function init() {
                         roughness: 0,
                         metalness: 0.5,
                     }));
-                    trex.position.set(0, 0, 0)
-                    trex.scale.set(2,2,2);
+                    place_trex()
                     scene.add( trex ); 
                 }
             });
@@ -127,8 +140,7 @@ function init() {
                         roughness: 0,
                         metalness: 0.5,
                     }));
-                    cactus.position.set(100, -25, 0)
-                    cactus.scale.set(0.25,0.25,0.25);
+                    place_cactus()
                     scene.add( cactus ); 
                 }
             });
@@ -204,6 +216,21 @@ function render() {
                     cactus.position.x = -limitX
                     velocityX += 0.1
                 }
+                
+                // COLLISION
+                const trexBox = new THREE.Box3().setFromObject(trex);
+                    const cactusBox = new THREE.Box3().setFromObject(cactus);
+
+                    if (trexBox.intersectsBox(cactusBox)) {
+                        if (!gameOver) {
+                            dialogue("TA PERDU GROS LOSER");
+                            canvas.classList.toggle("fullscreen")
+                            inGame = false
+                            place_cactus()
+                            place_trex()
+                        }
+                    }
+
 
                 trex.rotation.x = 0;
                 trex.rotation.y = Math.PI / 2;
