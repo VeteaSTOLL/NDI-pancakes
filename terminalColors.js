@@ -22,19 +22,19 @@ function changeColor(cmd, term) {
         } case "c": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#4864D4'
+                foreground: '#C5F1CD'
             };
             break;
         } case "d": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#B25CED'
+                foreground: '#D3A1F7'
             };
             break;
         } case "e": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#ED5C5C'
+                foreground: '#f04444ff'
             };
             break;
         } case "f": {
@@ -44,7 +44,7 @@ function changeColor(cmd, term) {
             };
             break;
         } default: {
-            term.write("\r\nInvalid Choice.\r\n" + 
+            term.write("Invalid Choice.\r\n" + 
                 "Syntax: color [a-z]");
             break;
         }
@@ -58,6 +58,9 @@ function initStyle(term) {
         background : '#1e1f1e',
         foreground: '#48D462',
     }
+    term.options.fontSize = 15
+    term.options.fontWeight = 700
+
 }
 
 
