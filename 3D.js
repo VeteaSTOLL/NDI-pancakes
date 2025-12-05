@@ -2,9 +2,61 @@ import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/OBJLoader.js';
 
 const canvas = document.getElementById("render");
-let camera, scene, renderer;
+let camera, scene, renderer, mat, timer, previous, dt;
 let distance = 300;
 let trex;
+
+const haloShader = {
+  uniforms: {
+    fq: { value: 50.0 },
+    amp: { value: 10.0},
+    off: { value: 0.0},
+    uColor: { value: new THREE.Color(0x00ffff) }, // couleur du halo
+    uCameraPos: { value: new THREE.Vector3() }    // position de la caméra
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    varying vec3 vWorldPos;
+
+    uniform float fq;
+    uniform float amp;
+    uniform float off;
+
+    void main() {
+        vNormal = normalize(normalMatrix * normal);
+
+        // Calcul de l'UV sphérique
+        vec3 pos = normalize(position);
+        float u = (atan(pos.z, pos.x) + 3.14159265) / (2.0 * 3.14159265);
+        float v = acos(pos.y) / 3.14159265;
+
+        // Déplacement le long de la normale
+        vec3 displacedPosition = position + normal * amp * cos(u*fq + off) * sin(v*fq + off);
+
+        // Calcul de la position dans l'espace monde
+        vec4 worldPosition = modelMatrix * vec4(displacedPosition, 1.0);
+        vWorldPos = worldPosition.xyz;
+
+        // Position finale à l'écran
+        gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 uColor;
+    uniform vec3 uCameraPos;
+
+    varying vec3 vNormal;
+    varying vec3 vWorldPos;
+
+    void main() {
+      vec3 viewDir = normalize(uCameraPos - vWorldPos);
+
+      float dotNV = 1.-dot(vNormal, viewDir);
+
+      gl_FragColor = vec4(uColor, pow(dotNV, 2.));
+    }
+  `
+};
 
 // --- AUDIO ---
 let listener, sound, analyser, sphere;
@@ -27,7 +79,15 @@ export function displayMusic(path) {
 
     // Sphere pour visualisation
     const geo = new THREE.IcosahedronGeometry(100, 100);
-    const mat = new THREE.MeshStandardMaterial({ color: 0xff5500, wireframe: true });
+    mat = new THREE.ShaderMaterial({
+    uniforms: haloShader.uniforms,
+        vertexShader: haloShader.vertexShader,
+        fragmentShader: haloShader.fragmentShader,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.FrontSide
+    });
+    mat.uniforms.uCameraPos.value.copy(camera.position);
     sphere = new THREE.Mesh(geo, mat);
     sphere.position.set(0, 0, -200);
     scene.add(sphere);
@@ -60,6 +120,7 @@ document.addEventListener("mousemove", (event) => {
 // --- INIT / ANIMATE ---
 init();
 animate();
+onWindowResize();
 
 function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
@@ -108,7 +169,9 @@ function animate() {
 }
 
 function render() {
-    const timer = Date.now()*0.0003;
+    timer = Date.now()*0.0003;
+    dt = timer - previous;
+    previous = timer;
 
     if(trex) {
         trex.rotation.y = mx;
@@ -121,6 +184,8 @@ function render() {
         const freq = analyser.getAverageFrequency();
         const scale = 1 + freq/128; // Ajuste amplitude
         sphere.scale.set(scale, scale, scale);
+        mat.uniforms.amp.value = scale * scale * 3;
+        mat.uniforms.off.value += dt * scale * 10;
     }
 
     renderer.render(scene, camera);
