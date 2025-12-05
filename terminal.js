@@ -1,4 +1,4 @@
-import { dialogue, displayMusic } from "3D";
+import { dialogue, displayMusic, game } from "3D";
 import { changeColor, termInitText, displayTermName, initStyle } from "./terminalColors.js";
 
 const TerminalStates = {
@@ -9,9 +9,8 @@ const TerminalStates = {
 const musicPlayer =[
    "res/onAndOn.mp3",
    "res/unity.mp3"
-
-
 ];
+const canvas = document.getElementById("render");
 
 let currentIndex = 0;
 let currentAudio = null;
@@ -153,6 +152,8 @@ function redrawLine(text) {
 // Command handler
 function handleCommand(cmd) {
   term.write("\r\n");
+
+
   
   if (cmd === "") return;
 
@@ -204,6 +205,13 @@ function handleCommand(cmd) {
 
   else if (cmd === "reload") {
     location.reload();
+  }
+
+  else if(cmd === 'game')
+  {
+    game()
+    writeAndTTS("Space to JUMP\n")
+
   }
   
   // Default answer (cmd not matched)
@@ -311,4 +319,6 @@ async function getDataFromHubert(userPrompt) {
   } catch (err) {
     console.error(err);
   }
+
+  
 }

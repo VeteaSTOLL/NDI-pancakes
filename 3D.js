@@ -5,6 +5,7 @@ const canvas = document.getElementById("render");
 let camera, scene, renderer, mat, timer, previous, dt;
 let distance = 400;
 let trex;
+let cactus;
 
 const haloShader = {
   uniforms: {
@@ -104,6 +105,31 @@ export function displayMusic(path) {
 // --- DINO T-REX ---
 let talking = false;
 
+// VARIABLES DE JEU
+
+let inGame = false
+let gameOver = false
+let velocityY = 0;
+const gravity = -0.6;
+const jumpForce = 12;
+let isOnGround = true;
+
+document.addEventListener("keydown", (e) => {
+    if (inGame && e.code === "Space" && isOnGround) {
+        velocityY = jumpForce;
+        isOnGround = false;
+        dialogue("Linux")
+    }
+});
+
+// LES cacTYS
+
+let limitX = -225
+let velocityX = -5
+
+
+
+
 export function dialogue(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'fr-FR';
@@ -130,6 +156,18 @@ init();
 animate();
 onWindowResize();
 
+function place_trex()
+{
+                    trex.position.set(0, 0, 0)
+                    trex.scale.set(2,2,2);
+}
+
+function place_cactus()
+{
+                    cactus.position.set(-limitX, -15, 0)
+                    cactus.scale.set(0.2,0.2,0.2);
+}
+
 function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
     camera.position.set(0, 20, distance);
@@ -153,12 +191,43 @@ function init() {
                     }));
                     trex.scale.set(2,2,2);
                     scene.add(trex);
+                    place_trex()
                 }
             });
         }
     );
 
     renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
+    new OBJLoader().load(
+        'res/cactus.obj',
+        function ( obj ) {					
+            obj.traverse(function (child) {
+                if (child.isMesh) {
+                    let geometry = child.geometry;
+                    geometry.rotateX(-Math.PI / 2);
+                    cactus = new THREE.Mesh( child.geometry, new THREE.MeshStandardMaterial({
+                        color: 0x55ff55,
+                        roughness: 0,
+                        metalness: 0.5,
+                    }));
+                    place_cactus()
+                    scene.add( cactus ); 
+                }
+            });
+            
+        },
+        function ( xhr ) {
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        },
+        function ( error ) {
+            console.log( 'An error happened' );
+        }
+    );
+
+    renderer = new THREE.WebGLRenderer( { canvas, alpha:true, antialias: true } );
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -200,30 +269,96 @@ function render() {
     dt = timer - previous;
     previous = timer;
 
-    if(trex) {
-        trex.rotation.y = mx;
-        trex.rotation.x = my;
-        if(talking) trex.rotation.x = my + Math.cos(timer*100)*0.25;
-    }
+    if (trex) {
+        if(!inGame)
+            {
+                trex.rotation.y = mx
+                trex.rotation.x = my
 
-    if(analyser && sphere) {
-        const freq = analyser.getAverageFrequency();
-        const scale = 1 + freq/128;
-        sphere.scale.set(scale, scale, scale);
-        mat.uniforms.amp.value = scale * scale * 3;
-        mat.uniforms.off.value += dt * scale * 10;
+                if (talking) {
+                    let fq = 100;
+                    let amp = 0.25;
+                    // trex.scale.set(2, 2+Math.cos(timer*fq)*amp,2);
 
-        // --- Synchroniser couleur du T-Rex ---
-        if(trex) {
-            const h = mat.uniforms.off.value * 0.05 % 1;
-            const color = hsv2rgb(h, 1, 1);
-            trex.material.color.copy(color);
+                    trex.rotation.x = my + Math.cos(timer*fq)*amp;
+                }
+                trex.rotation.y = mx;
+                trex.rotation.x = my;
+                if(talking) trex.rotation.x = my + Math.cos(timer*100)*0.25;
+
+                if(analyser && sphere) {
+                    const freq = analyser.getAverageFrequency();
+                    const scale = 1 + freq/128;
+                    sphere.scale.set(scale, scale, scale);
+                    mat.uniforms.amp.value = scale * scale * 3;
+                    mat.uniforms.off.value += dt * scale * 10;
+
+                    // --- Synchroniser couleur du T-Rex ---
+                    const h = mat.uniforms.off.value * 0.05 % 1;
+                    const color = hsv2rgb(h, 1, 1);
+                    trex.material.color.copy(color);
+                }
         }
+        else {
+            
+                velocityY += gravity;
+                trex.position.y += velocityY;
+
+                if (trex.position.y <= 0) {
+                    trex.position.y = 0;
+                    velocityY = 0;
+                    isOnGround = true;
+                }
+
+                if( !isOnGround) {
+                    trex.rotation.x += 0.19;
+                } else {
+                    trex.rotation.x = 0;
+                }
+
+                cactus.position.x += velocityX
+
+                if(cactus.position.x < limitX)
+                {
+                    cactus.position.x = -limitX
+                    velocityX += 0.1
+                }
+                
+                // COLLISION
+                const trexBox = new THREE.Box3().setFromObject(trex);
+                    const cactusBox = new THREE.Box3().setFromObject(cactus);
+
+                    if (trexBox.intersectsBox(cactusBox)) {
+                        if (!gameOver) {
+                            dialogue("TA PERDU GROS LOSER");
+                            canvas.classList.toggle("fullscreen")
+                            inGame = false
+                            velocityX = -5
+                            place_cactus()
+                            place_trex()
+                        }
+                    }
+
+
+            }
+
+
     }
 
-    renderer.render(scene, camera);
+    renderer.render( scene, camera );
 }
 
 export function changeDinoColor(hex) {
     if (trex) trex.material.color.set(hex);
+}
+
+export function game(){
+    canvas.classList.toggle("fullscreen")
+    trex.position.set(-150, 0, 0)
+    trex.scale.set(0.5,0.5,0.5);
+
+                trex.rotation.z = 0;
+                trex.rotation.x = 0;
+                trex.rotation.y = Math.PI / 2;
+    inGame = true
 }
