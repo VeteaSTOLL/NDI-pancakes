@@ -63,6 +63,15 @@ const haloShader = {
 // --- AUDIO ---
 let listener, sound, analyser, sphere;
 let currentSound = null;
+
+export function killTheCloud(){
+    scene.remove(sphere);
+}
+
+export function stopMusicFinally(){
+    currentSound.stop()
+
+}
 export function displayMusic(path) {
     scene.remove(sphere);
 
@@ -354,6 +363,8 @@ export function changeDinoColor(hex) {
 
 export function game(){
     scene.remove(sphere);
+    currentSound.stop(); 
+
     canvas.classList.toggle("fullscreen")
     trex.position.set(-150, 0, 0)
     trex.scale.set(0.5,0.5,0.5);

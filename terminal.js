@@ -1,5 +1,6 @@
-import { dialogue, displayMusic, game } from "3D";
+import { dialogue, displayMusic, game ,stopMusicFinally} from "3D";
 import { changeColor, termInitText, displayTermName, initStyle } from "./terminalColors.js";
+import { killTheCloud } from "./3D.js";
 
 const TerminalStates = {
   DEFAULT: "",
@@ -226,6 +227,13 @@ function handleCommand(cmd) {
   {
     game()
     writeAndTTS("Space to JUMP\n")
+
+  }
+
+  else if(cmd === 'stop')
+  {
+    stopMusicFinally()
+    killTheCloud()
 
   }
   
