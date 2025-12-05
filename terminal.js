@@ -275,6 +275,7 @@ function formatHelp() {
     " - clear           : clear the terminal\r\n" +
     " - reload          : reload the application\r\n" +
     " - neofetch        : display terminal identity\r\n" +
+    " - tuto            : launch the tutorial\r\n"+
     " - color [a-f]     : change the terminal color\r\n" +
     "         a = green\r\n" +
     "         b = light blue\r\n" +
