@@ -30,3 +30,30 @@ html, body {
   width: 100%;
   height: 100%;
 }
+
+#NIRD{
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+#NIRD:hover{
+  transform: translateY(-10px) scale(1.5);
+  opacity: 09;
+}
+
+.animP{
+  opacity:0;
+  transform: translateY(10px);
+  animation: fadeslide 07s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeslide {
+  from{
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
