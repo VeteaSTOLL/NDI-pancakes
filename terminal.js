@@ -344,6 +344,7 @@ function tuto(cmd){
     writeAndTTS("Congratulations ! You finished the tutorial !\r\n"); 
     
   }
+}
 async function getDataFromHubert(userPrompt) {
   const url = "http://127.0.0.1:5000/generate";
   /*try {
@@ -400,6 +401,4 @@ async function getDataFromHubert(userPrompt) {
   } catch (err) {
     console.error(err);
   }
-
-  
 }
