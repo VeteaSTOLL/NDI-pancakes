@@ -1,6 +1,6 @@
-var DEBUG = true; // Useless for now
+import { changeDinoColor } from "./3D.js"; 
 
-function changeColor(cmd, term) {
+export function changeColor(cmd, term) {
 
     let regex = /color ([a-z])/
     let match = cmd.match(regex)
@@ -12,39 +12,45 @@ function changeColor(cmd, term) {
                 background : '#1e1f1e',
                 foreground: '#48D462'
             };
+            changeDinoColor(0x48D462);
             break;
         } case "b": {
             term.options.theme = {
                 background : '#1e1f1e',
                 foreground: '#48C1D4'
             };
+            changeDinoColor(0x48C1D4);
             break;
         } case "c": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#4864D4'
+                foreground: '#C5F1CD'
             };
+            changeDinoColor(0x4864D4);
             break;
         } case "d": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#B25CED'
+                foreground: '#D3A1F7'
             };
+            changeDinoColor(0xB25CED);
             break;
         } case "e": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#ED5C5C'
+                foreground: '#f04444ff'
             };
+            changeDinoColor(0xED5C5C);
             break;
         } case "f": {
             term.options.theme = {
                 background : '#1e1f1e',
                 foreground: '#EDC45C'
             };
+            changeDinoColor(0xEDC45C);
             break;
         } default: {
-            term.write("\r\nInvalid Choice.\r\n" + 
+            term.write("Invalid Choice.\r\n" + 
                 "Syntax: color [a-z]");
             break;
         }
@@ -53,18 +59,21 @@ function changeColor(cmd, term) {
     return;
 }
 
-function initStyle(term) {
+export function initStyle(term) {
     term.options.theme = {
         background : '#1e1f1e',
         foreground: '#48D462',
     }
+    term.options.fontSize = 15
+    term.options.fontWeight = 700
+
 }
 
 
 /**
  * "neofetch"
  */
-function displayTermName(term) {
+export function displayTermName(term) {
     term.write(
         "\r\n" +
         "\t $$\\   $$\\ $$$$$$\\ $$$$$$$\\  $$$$$$$\\   \r\n" +
@@ -82,6 +91,6 @@ function displayTermName(term) {
 /**
  * Initialises the terminal at startup/reload
  */
-function termInitText(term) {
+export function termInitText(term) {
     displayTermName(term);
 }

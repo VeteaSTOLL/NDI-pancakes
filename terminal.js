@@ -1,4 +1,5 @@
-import { dialogue } from "3D";
+import { dialogue, displayMusic } from "3D";
+import { changeColor, termInitText, displayTermName, initStyle } from "./terminalColors.js";
 var on_tuto = false;
 
 const TerminalStates = {
@@ -10,11 +11,9 @@ const TerminalStates = {
 // Create terminal
 export const term = new Terminal({
   cursorBlink: true,
-  theme : {
-    background : '#1e1f1e',
-    foreground: '#48D462',
-  }
 });
+
+initStyle(term);
 
 function writeAndTTS(str) {
   term.write(str);
@@ -147,7 +146,9 @@ function handleCommand(cmd) {
   } else if (cmd.match(/Ni/)) {
     cmdNi();
 
-  } else if (cmd.match(/R/)) {
+  } else if (cmd.match(/music/)) {
+    displayMusic("res/alone.mp3");
+  }else if (cmd.match(/R/)) {
     cmdR();
 
   } else if (cmd.match(/D/)){
@@ -207,8 +208,10 @@ function formatHelp() {
    " - Ni : infos about NIRD's Inclusiveness\r\n"+
    " - R : infos about NIRD's Responsible process\r\n"+
    " - D : infos about NIRD's Durability\r\n"+
-   " - neofetch : informations on the terminal\r\n"
-}
+   " - neofetch : informations on the terminal\r\n"+
+   " - music : play some music\r\n"
+  }
+
 
 function handleCommandHubert(cmd) {
   if (cmd === "") return;
