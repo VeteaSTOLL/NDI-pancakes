@@ -1,14 +1,11 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/OBJLoader.js';
 
-
 const canvas = document.getElementById("render");
-let camera, scene, renderer;
-let distance = 300;
+let camera, scene, renderer, mat, timer, previous, dt;
+let distance = 400;
 let trex;
 
-<<<<<<< Updated upstream
-=======
 const haloShader = {
   uniforms: {
     fq: { value: 50.0 },
@@ -62,7 +59,6 @@ const haloShader = {
   `
 };
 
->>>>>>> Stashed changes
 // --- AUDIO ---
 let listener, sound, analyser, sphere;
 
@@ -83,9 +79,6 @@ export function displayMusic(path) {
     analyser = new THREE.AudioAnalyser(sound, 64);
 
     const geo = new THREE.IcosahedronGeometry(100, 100);
-<<<<<<< Updated upstream
-    const mat = new THREE.MeshStandardMaterial({ color: 0xff5500, wireframe: true });
-=======
     mat = new THREE.ShaderMaterial({
         uniforms: haloShader.uniforms,
         vertexShader: haloShader.vertexShader,
@@ -95,7 +88,6 @@ export function displayMusic(path) {
         side: THREE.FrontSide
     });
     mat.uniforms.uCameraPos.value.copy(camera.position);
->>>>>>> Stashed changes
     sphere = new THREE.Mesh(geo, mat);
     sphere.position.set(0, 0, -200);
     scene.add(sphere);
@@ -128,6 +120,7 @@ document.addEventListener("mousemove", (event) => {
 // --- INIT / ANIMATE ---
 init();
 animate();
+onWindowResize();
 
 function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
@@ -195,7 +188,9 @@ function animate() {
 }
 
 function render() {
-    const timer = Date.now()*0.0003;
+    timer = Date.now()*0.0003;
+    dt = timer - previous;
+    previous = timer;
 
     if(trex) {
         trex.rotation.y = mx;
@@ -207,11 +202,6 @@ function render() {
         const freq = analyser.getAverageFrequency();
         const scale = 1 + freq/128;
         sphere.scale.set(scale, scale, scale);
-<<<<<<< Updated upstream
-    }
-
-    renderer.render(scene, camera);
-=======
         mat.uniforms.amp.value = scale * scale * 3;
         mat.uniforms.off.value += dt * scale * 10;
 
@@ -228,5 +218,4 @@ function render() {
 
 export function changeDinoColor(hex) {
     if (trex) trex.material.color.set(hex);
->>>>>>> Stashed changes
 }
