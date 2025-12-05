@@ -27,6 +27,18 @@ def generate():
     prompts_history = json_data.get("promptsHistory")
     print(f"prompts_history : {prompts_history}")
     
+    
+    mode_confus = False
+    
+    # 90% de chances que le prompt soit remplacer par le dernier
+    # de l'historique
+    if random.random() < 0.1 and len(prompts_history) > 1:
+        print("Remplacement du prompt par le dernier de l'historique")
+        user_prompt = prompts_history[-2]
+    else:
+        # Sinon 70% de chances d'être confus
+        mode_confus = random.random() < 0.9
+
 
     if user_prompt is not None:
         def stream():
@@ -61,23 +73,31 @@ def generate():
             random_template = random.choice(questions_templates)
             print(random_template)
 
-            random_subject = random.random() < -1.0
+            
             
 
-            if random_subject:
-                print("Génération autre sujet")
+            # if mode_confus:
+            #     print("Génération autre sujet")
+            #     system_prompt = (
+            #         "Tu es une IA mais aujourd'hui tu es un peu fatiguée. "
+            #         "Il t'arrive de mal comprendre les questions, "
+            #         "ou de répondre à côté sans raison. "
+            #         "Ton nom est Hubert"
+            #     )
+            # 
+            #     # system_prompt = (
+            #     #     "Ton nom est Hubert, tu est une IA mais aujourd'hui tu es un peu fatiguée. "
+            #     #     "Tu va donc devoir récupérer le <thème> principale du prompt de l'utilisateur "
+            #     #     f"et répondre plutôt à la question \"{random_template.format("<thème>")}\""
+            #     # )
+            if mode_confus:
+                print("Génération confuse")
                 system_prompt = (
-                    "Tu es une IA mais aujourd'hui tu es un peu fatiguée. "
+                    "Tu es une IA un peu confuse. "
                     "Il t'arrive de mal comprendre les questions, "
-                    "ou de répondre à côté sans raison. "
-                    "Ton nom est Hubert"
+                    "ou de réinterpréter le sens des phrases. "
+                    "Réponds toujours comme si tu n'étais pas complètement sûr de ce que l'utilisateur veut dire."
                 )
-
-                # system_prompt = (
-                #     "Ton nom est Hubert, tu est une IA mais aujourd'hui tu es un peu fatiguée. "
-                #     "Tu va donc devoir récupérer le <thème> principale du prompt de l'utilisateur "
-                #     f"et répondre plutôt à la question \"{random_template.format("<thème>")}\""
-                # )
             else:
                 print("Génération normale")
                 system_prompt = (
@@ -97,7 +117,7 @@ def generate():
                 }
             ]
 
-            params = get_sampling_params(random_subject)
+            params = get_sampling_params(mode_confus)
 
             for chunk in llm.create_chat_completion(
                 messages=messages,
@@ -115,17 +135,12 @@ def generate():
     
     return ""
 
-def get_sampling_params(random_subject: bool):
-    return {
-        "temperature": 0.4,
-        "top_p": 0.9,
-        "repeat_penalty": 1.1
-    }
-    if random_subject: # réponses "à côté"
+def get_sampling_params(mode_confus: bool):
+    if mode_confus: # réponses "à côté"
         return {
-            "temperature": 1.6,
-            "top_p": 0.5,
-            "repeat_penalty": 0.8
+            "temperature": 0.8, # plus élevé pour “erreurs”
+            "top_p": 0.9,
+            "repeat_penalty": 1.0
         }
     else:
         return {

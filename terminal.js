@@ -205,7 +205,8 @@ function formatHelp() {
    " - color [a-f]: changes the color [green, lightBlue, white-ish, mauve, red, gold]\r\n" +
    " - Ni\r\n" +
    " - R\r\n" +
-   " - D\r\n"
+   " - D\r\n" +
+   " - hubert : better than ChatGPT\r\n"
 }
 
 function handleCommandHubert(cmd) {
