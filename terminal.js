@@ -139,15 +139,17 @@ async function getDataFromHubert(userPrompt) {
       const { value, done } = await reader.read();
       if (done) break;
 
-      const chunk = decoder.decode(value, { stream: true });
+      let chunk = decoder.decode(value, { stream: true });
       result += chunk;
 
-      console.log("Token reçu :", chunk);
-      chunk.replace('\n', '');
+      console.log("Token reçu :", JSON.stringify(chunk));
+      chunk = chunk.replace(/\n/g, '\r\n');
+      console.log("Token remplacé :", JSON.stringify(chunk));
       term.write(chunk);
     }
 
     console.log("Réponse finale :", result);
+    term.write("...");
     prompt();
   } catch (err) {
     console.error(err);
