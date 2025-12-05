@@ -1,4 +1,4 @@
-import { dialogue } from "3D";
+import { dialogue, displayMusic } from "3D";
 
 const TerminalStates = {
   DEFAULT: "",
@@ -141,7 +141,9 @@ function handleCommand(cmd) {
   } else if (cmd.match(/Ni/)) {
     cmdNi();
 
-  } else if (cmd.match(/R/)) {
+  } else if (cmd.match(/music/)) {
+    displayMusic("res/alone.mp3");
+  }else if (cmd.match(/R/)) {
     cmdR();
 
   } else if (cmd.match(/D/)){
@@ -197,10 +199,11 @@ function formatHelp() {
   return "\r\nAvailable commands:\r\n" +
    " - help : show this message\r\n" +
    " - clear : clear the terminal\r\n" +
+   " - music : play some music\r\n" +
    " - color [a-f]: changes the color [green, lightBlue, white-ish, mauve, red, gold]\r\n" +
-   " - Ni: Try this :3\r\n" +
-   " - R: Do that after 'Ni'\r\n" +
-   " - D: and this Idk\r\n"
+   " - Ni\r\n" +
+   " - R\r\n" +
+   " - D\r\n"
 }
 
 function handleCommandHubert(cmd) {
