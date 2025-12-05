@@ -137,3 +137,6 @@ function render() {
 
     renderer.render( scene, camera );
 }
+export function changeDinoColor(hex) {
+    if (trex) trex.material.color.set(hex);
+}
