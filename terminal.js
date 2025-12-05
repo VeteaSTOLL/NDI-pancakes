@@ -7,11 +7,24 @@ const TerminalStates = {
 };
 
 const musicPlayer =[
+   "res/blank.mp3",
+   "res/candyland.mp3",
+   "res/cradles.mp3",
+   "res/fade.mp3",
+   "res/feel good.mp3",
+   "res/heroes tonight.mp3",
+   "res/infectious.mp3",
+   "res/invincible.mp3",
+   "res/lets go.mp3",
+   "res/mortals.mp3",
+   "res/my heart.mp3",
    "res/onAndOn.mp3",
+   "res/sky high.mp3",
+   "res/spectre.mp3",
+   "res/symbolysm.mp3",
    "res/unity.mp3"
-
-
 ];
+
 
 let currentIndex = 0;
 let currentAudio = null;
