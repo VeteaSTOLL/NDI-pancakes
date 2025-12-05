@@ -24,21 +24,21 @@ export function changeColor(cmd, term) {
         } case "c": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#4864D4'
+                foreground: '#C5F1CD'
             };
             changeDinoColor(0x4864D4);
             break;
         } case "d": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#B25CED'
+                foreground: '#D3A1F7'
             };
             changeDinoColor(0xB25CED);
             break;
         } case "e": {
             term.options.theme = {
                 background : '#1e1f1e',
-                foreground: '#ED5C5C'
+                foreground: '#f04444ff'
             };
             changeDinoColor(0xED5C5C);
             break;
@@ -50,7 +50,7 @@ export function changeColor(cmd, term) {
             changeDinoColor(0xEDC45C);
             break;
         } default: {
-            term.write("\r\nInvalid Choice.\r\n" + 
+            term.write("Invalid Choice.\r\n" + 
                 "Syntax: color [a-z]");
             break;
         }
@@ -64,6 +64,9 @@ export function initStyle(term) {
         background : '#1e1f1e',
         foreground: '#48D462',
     }
+    term.options.fontSize = 15
+    term.options.fontWeight = 700
+
 }
 
 

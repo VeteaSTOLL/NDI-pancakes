@@ -1,7 +1,5 @@
-import { dialogue } from "3D";
+import { dialogue, displayMusic } from "3D";
 import { changeColor, termInitText, displayTermName } from "./terminalColors.js";
-
-
 
 const TerminalStates = {
   DEFAULT: "",
@@ -12,11 +10,9 @@ const TerminalStates = {
 // Create terminal
 export const term = new Terminal({
   cursorBlink: true,
-  theme : {
-    background : '#1e1f1e',
-    foreground: '#48D462',
-  }
 });
+
+initStyle(term);
 
 function writeAndTTS(str) {
   term.write(str);
@@ -139,19 +135,23 @@ function handleCommand(cmd) {
 
   if (cmd === "help") {
     cmdHelp();
+
   } else if (cmd.match(/clear/)) {
     term.clear();
 
   } else if (cmd.match(/Ni/)) {
     cmdNi();
 
-  } else if (cmd.match(/R/)) {
+  } else if (cmd.match(/music/)) {
+    displayMusic("res/alone.mp3");
+  }else if (cmd.match(/R/)) {
     cmdR();
 
   } else if (cmd.match(/D/)){
     cmdD();
   } else if (cmd.match(/color/)) {
     changeColor(cmd, term);
+
   } else if (cmd === "hubert") {
     // Message d'aide
     writeAndTTS("\r\n enter \"exit\" to quit hubert")
@@ -182,7 +182,7 @@ function handleCommand(cmd) {
 
 
 function cmdHelp(){
-  writeAndTTS("Available commands:\r\n - help : show this help\r\n - clear : clear the terminal");
+  writeAndTTS(formatHelp());
 }
 
 function cmdNi(){
@@ -200,8 +200,13 @@ function formatHelp() {
   return "\r\nAvailable commands:\r\n" +
    " - help : show this message\r\n" +
    " - clear : clear the terminal\r\n" +
-   " - color [a-f]: changes the color"
+   " - music : play some music\r\n" +
+   " - color [a-f]: changes the color [green, lightBlue, white-ish, mauve, red, gold]\r\n" +
+   " - Ni\r\n" +
+   " - R\r\n" +
+   " - D\r\n"
 }
+
 function handleCommandHubert(cmd) {
   if (cmd === "") return;
 
