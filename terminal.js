@@ -1,4 +1,4 @@
-import { dialogue, displayMusic } from "3D";
+import { dialogue, displayMusic, game } from "3D";
 import { changeColor, termInitText, displayTermName, initStyle } from "./terminalColors.js";
 var on_tuto = false;
 
@@ -7,7 +7,44 @@ const TerminalStates = {
   HUBERT: "hubert"
 };
 
+const musicPlayer =[
+   "res/blank.mp3",
+   "res/candyland.mp3",
+   "res/cradles.mp3",
+   "res/fade.mp3",
+   "res/feel good.mp3",
+   "res/heroes tonight.mp3",
+   "res/infectious.mp3",
+   "res/invincible.mp3",
+   "res/lets go.mp3",
+   "res/mortals.mp3",
+   "res/my heart.mp3",
+   "res/onAndOn.mp3",
+   "res/sky high.mp3",
+   "res/spectre.mp3",
+   "res/symbolysm.mp3",
+   "res/unity.mp3"
+];
+const canvas = document.getElementById("render");
 
+
+let currentIndex = 0;
+let currentAudio = null;
+
+
+function playMusic(index) {
+  // Stopper l'audio en cours si il y en a un
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+
+  // Créer un nouvel audio
+  currentAudio = new Audio(musicPlayer[index]);
+  currentAudio.play();
+
+  writeAndTTS(`Playing: ${musicPlayer[index].split("/").pop()}`);
+}
 // Create terminal
 export const term = new Terminal({
   cursorBlink: true,
@@ -135,6 +172,8 @@ function redrawLine(text) {
 // Command handler
 function handleCommand(cmd) {
   term.write("\r\n");
+
+
   
   if (cmd === "") return;
 
@@ -143,12 +182,25 @@ function handleCommand(cmd) {
   } else if (cmd.match(/clear/)) {
     term.clear();
 
-  } else if (cmd.match(/Ni/)) {
+
+
+
+  }else if (cmd.match(/next/)) {
+    currentIndex = (currentIndex + 1) % musicPlayer.length;
+    displayMusic(musicPlayer[currentIndex]);
+}
+  
+  
+  
+  
+  
+  
+  else if (cmd.match(/Ni/)) {
     cmdNi();
 
   } else if (cmd.match(/music/)) {
-    displayMusic("res/alone.mp3");
-  }else if (cmd.match(/R/)) {
+    displayMusic(musicPlayer[currentIndex]);
+} else if (cmd.match(/R/)) {
     cmdR();
 
   } else if (cmd.match(/D/)){
@@ -177,6 +229,13 @@ function handleCommand(cmd) {
   else if (cmd === "reload") {
     location.reload();
   }
+
+  else if(cmd === 'game')
+  {
+    game()
+    writeAndTTS("Space to JUMP\n")
+
+  }
   
   // Default answer (cmd not matched)
   else {
@@ -201,25 +260,47 @@ function cmdD(){
 }
 
 function formatHelp() {
-  return "\r\nAvailable commands:\r\n" +
-   " - help : show this message\r\n" +
-   " - clear : clear the terminal\r\n" +
-   " - color [a-f]: changes the color\r\n" +
-   " - Ni : infos about NIRD's Inclusiveness\r\n"+
-   " - R : infos about NIRD's Responsible process\r\n"+
-   " - D : infos about NIRD's Durability\r\n"+
-   " - neofetch : informations on the terminal\r\n"+
-   " - music : play some music\r\n"
-  }
+  return (
+    "\r\nAvailable commands:\r\n" +
+    "\r\n=== System Commands ===\r\n" +
+    " - help            : show this message\r\n" +
+    " - clear           : clear the terminal\r\n" +
+    " - reload          : reload the application\r\n" +
+    " - neofetch        : display terminal identity\r\n" +
+    " - color [a-f]     : change the terminal color\r\n" +
+    "         a = green\r\n" +
+    "         b = light blue\r\n" +
+    "         c = white-ish\r\n" +
+    "         d = mauve\r\n" +
+    "         e = red\r\n" +
+    "         f = gold\r\n" +
 
+    "\r\n=== Music Commands ===\r\n" +
+    " - music           : play the current music\r\n" +
+    " - next            : play the next track\r\n" +
+
+    "\r\n=== NIRD Commands ===\r\n" +
+    " - Ni              : Inclusive Computer Science\r\n" +
+    " - R               : Responsible Technology\r\n" +
+    " - D               : Durability\r\n" +
+
+    "\r\n=== Fun Commands ===\r\n" +
+    " - game            : start the mini-game (Space to jump)\r\n" +
+
+    "\r\n=== AI Mode ===\r\n" +
+    " - hubert          : enter Hubert AI mode\r\n" +
+    " - exit            : exit Hubert AI mode\r\n"
+  );
+}
 
 function handleCommandHubert(cmd) {
   if (cmd === "") return;
 
-  console.log(cmd);
   // Envoie du prompt à l'IA
   if (cmd === "exit") {
     terminalState = TerminalStates.DEFAULT;
+  } else {
+    getDataFromHubert(cmd);
   }
 }
 
@@ -255,4 +336,62 @@ function tuto(cmd){
     writeAndTTS("Congratulations ! You finished the tutorial !\r\n"); 
     
   }
+async function getDataFromHubert(userPrompt) {
+  const url = "http://127.0.0.1:5000/generate";
+  /*try {
+    console.log("userPrompt : ", userPrompt);
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        userPrompt: userPrompt
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      }
+    });
+
+    const result = await response.json();
+    console.log(result);
+    // term.write(result);
+  } catch (error) {
+    console.error(error.message);
+  }*/
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userPrompt: userPrompt,
+        promptsHistory: bash_history
+      })
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    let result = "";
+
+    term.write("\r");
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+
+      let chunk = decoder.decode(value, { stream: true });
+      result += chunk;
+
+      console.log("Token reçu :", JSON.stringify(chunk));
+      chunk = chunk.replace(/\n/g, '\r\n');
+      console.log("Token remplacé :", JSON.stringify(chunk));
+      term.write(chunk);
+    }
+
+    console.log("Réponse finale :", result);
+    term.write("...");
+    prompt();
+  } catch (err) {
+    console.error(err);
+  }
+
+  
 }

@@ -20,3 +20,9 @@ build/
 
 # Optional: cache folders
 .cache/
+
+# Modeles IA
+serveur/Models/
+
+# Caches Python
+serveur/__pycache__/
