@@ -1,27 +1,31 @@
-<!doctype html>
-<html>
-  <head>
-    <link rel="icon" type="image/x-incon" href="./favicon.ico">
-    <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
-    <link rel="stylesheet" href="style.css" />
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "./three.module.js",
-                "three/addons/": "./jsm/",
-                "3D": "./3D.js"
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIRD</title>
+    <style>
+        p {
+            width: 50%;
+            margin: 10px auto;
+            font-size: 30px;
+            font-weight: 300;
         }
-    </script>
-    <script type="module" src="3D.js"></script>
-    <script src="node_modules/@xterm/xterm/lib/xterm.js"></script>
-    <script src="node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
-  </head>
-
-  <body>
-    <canvas id="render"></canvas>
-    <div id="terminal"></div>
-    <script type="module" src="terminalColors.js"></script>
-    <script type="module" src="terminal.js" defer></script>
-  </body>
+        #NIRD {
+            zoom: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column;">
+        <img id="NIRD" src="NIRD.png" alt="Logo du NIRD" style="margin: 5% auto; width: 25%;">
+        <p>
+            L'initiative NIRD - dans sa quête d'un monde informatique plus ouvert - à décider d'initier les jeunes (et les plus agés) au terminal.
+        </p>
+        <p>
+            Dans ce but vous allez pouvoir explorer un terminal web au travers d'un rapide tutoriel. N'ayez crainte : même à la fin de ce dernier, notre fidèl Hubert vous tiendra compagnie !
+        </p>
+    </div>
+</body>
 </html>
