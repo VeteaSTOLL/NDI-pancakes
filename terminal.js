@@ -197,7 +197,7 @@ function cmdR(){
   writeAndTTS("Responsible : \r\n The NIRD aproach promotes a reasoned process when it comes to technology. In a world of constant inovation, we greatlly value data privacy and co-creation. We first and furmost connect teachers with each others, via a Tchap forum, encouraging them to exchange teaching materials and raise awarness amongst managment teams. One of our other bigest mission is to spread Open Source resources. That is why we deploy computers equiped with Linux.");
 }
 function cmdD(){
-  writeAndTTS("Durability: \r\n The NIRD aproach is ")
+  writeAndTTS("Durability: (Sustainability) \r\n reconditioning and combating obsolescence by repackaging obsolete computers (replacement of components, reinstallation via lightweight systems, etc.), NIRD extends the lifespan of the equipment, avoiding waste and the ecological footprint of frequent renewal. This also allows schools, often constrained by tight budgets, to equip their computer parks economically while respecting ecological principles. ")
 }
 
 function formatHelp() {
