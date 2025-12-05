@@ -240,15 +240,75 @@ function formatHelp() {
    " - color [a-f]: changes the color [green, lightBlue, white-ish, mauve, red, gold]\r\n" +
    " - Ni\r\n" +
    " - R\r\n" +
-   " - D\r\n"
+   " - D\r\n" +
+   " - hubert : better than ChatGPT\r\n"
 }
 
 function handleCommandHubert(cmd) {
   if (cmd === "") return;
 
-  console.log(cmd);
   // Envoie du prompt à l'IA
   if (cmd === "exit") {
     terminalState = TerminalStates.DEFAULT;
+  } else {
+    getDataFromHubert(cmd);
+  }
+}
+
+async function getDataFromHubert(userPrompt) {
+  const url = "http://127.0.0.1:5000/generate";
+  /*try {
+    console.log("userPrompt : ", userPrompt);
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        userPrompt: userPrompt
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      }
+    });
+
+    const result = await response.json();
+    console.log(result);
+    // term.write(result);
+  } catch (error) {
+    console.error(error.message);
+  }*/
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userPrompt: userPrompt,
+        promptsHistory: bash_history
+      })
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    let result = "";
+
+    term.write("\r");
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+
+      let chunk = decoder.decode(value, { stream: true });
+      result += chunk;
+
+      console.log("Token reçu :", JSON.stringify(chunk));
+      chunk = chunk.replace(/\n/g, '\r\n');
+      console.log("Token remplacé :", JSON.stringify(chunk));
+      term.write(chunk);
+    }
+
+    console.log("Réponse finale :", result);
+    term.write("...");
+    prompt();
+  } catch (err) {
+    console.error(err);
   }
 }
