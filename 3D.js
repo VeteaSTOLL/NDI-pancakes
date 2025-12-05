@@ -84,7 +84,7 @@ function place_trex()
 
 function place_cactus()
 {
-                    cactus.position.set(100, -15, 0)
+                    cactus.position.set(-limitX, -15, 0)
                     cactus.scale.set(0.2,0.2,0.2);
 }
 
@@ -209,6 +209,12 @@ function render() {
                     isOnGround = true;
                 }
 
+                if( !isOnGround) {
+                    trex.rotation.x += 0.19;
+                } else {
+                    trex.rotation.x = 0;
+                }
+
                 cactus.position.x += velocityX
 
                 if(cactus.position.x < limitX)
@@ -226,15 +232,13 @@ function render() {
                             dialogue("TA PERDU GROS LOSER");
                             canvas.classList.toggle("fullscreen")
                             inGame = false
+                            velocityX = -5
                             place_cactus()
                             place_trex()
                         }
                     }
 
 
-                trex.rotation.x = 0;
-                trex.rotation.y = Math.PI / 2;
-                trex.rotation.z = 0;
             }
 
 
@@ -247,5 +251,9 @@ export function game(){
     canvas.classList.toggle("fullscreen")
     trex.position.set(-150, 0, 0)
     trex.scale.set(0.5,0.5,0.5);
+
+                trex.rotation.z = 0;
+                trex.rotation.x = 0;
+                trex.rotation.y = Math.PI / 2;
     inGame = true
 }
