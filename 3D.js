@@ -132,7 +132,7 @@ let velocityX = -5
 
 export function dialogue(text) {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'fr-FR';
+    utterance.lang = 'en-US';
     utterance.pitch = 0.5;
     utterance.rate = 1;
     utterance.volume = 1;
