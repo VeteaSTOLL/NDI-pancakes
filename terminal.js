@@ -1,10 +1,11 @@
-import { dialogue } from "3D";
+import { dialogue, game } from "3D";
 
 const TerminalStates = {
   DEFAULT: "",
   HUBERT: "hubert"
 };
 
+const canvas = document.getElementById("render");
 
 // Create terminal
 export const term = new Terminal({
@@ -131,6 +132,8 @@ function redrawLine(text) {
 // Command handler
 function handleCommand(cmd) {
   term.write("\r\n");
+
+
   
   if (cmd === "") return;
 
@@ -165,6 +168,13 @@ function handleCommand(cmd) {
 
   else if (cmd === "reload") {
     location.reload();
+  }
+
+  else if(cmd === 'game')
+  {
+    game()
+    writeAndTTS("Space to JUMP\n")
+
   }
   
   // Default answer (cmd not matched)
@@ -207,4 +217,6 @@ function handleCommandHubert(cmd) {
   if (cmd === "exit") {
     terminalState = TerminalStates.DEFAULT;
   }
+
+  
 }

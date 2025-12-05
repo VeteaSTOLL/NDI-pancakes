@@ -19,3 +19,10 @@ html, body {
   z-index: 1000;
   border: solid white;
 }
+
+#render.fullscreen {
+    top: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+}

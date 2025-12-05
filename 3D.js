@@ -5,8 +5,32 @@ const canvas = document.getElementById("render");
 let camera, scene, renderer;
 let distance = 300;
 let trex;
+let cactus;
 
 let talking = false;
+
+// VARIABLES DE JEU
+
+let inGame = false
+let velocityY = 0;
+const gravity = -0.6;
+const jumpForce = 12;
+let isOnGround = true;
+
+document.addEventListener("keydown", (e) => {
+    if (inGame && e.code === "Space" && isOnGround) {
+        velocityY = jumpForce;
+        isOnGround = false;
+        dialogue("Linux")
+    }
+});
+
+// LES cacTYS
+
+let limitX = -225
+let velocityX = -3
+
+
 
 export function dialogue(text) {
 
@@ -91,6 +115,32 @@ function init() {
         }
     );
 
+    new OBJLoader().load(
+        'res/cactus.obj',
+        function ( obj ) {					
+            obj.traverse(function (child) {
+                if (child.isMesh) {
+                    let geometry = child.geometry;
+                    geometry.rotateX(-Math.PI / 2);
+                    cactus = new THREE.Mesh( child.geometry, new THREE.MeshStandardMaterial({
+                        color: 0x55ff55,
+                        roughness: 0,
+                        metalness: 0.5,
+                    }));
+                    cactus.position.set(100, -25, 0)
+                    cactus.scale.set(0.25,0.25,0.25);
+                    scene.add( cactus ); 
+                }
+            });
+            
+        },
+        function ( xhr ) {
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        },
+        function ( error ) {
+            console.log( 'An error happened' );
+        }
+    );
 
     renderer = new THREE.WebGLRenderer( { canvas, alpha:true, antialias: true } );
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -123,17 +173,52 @@ function render() {
     // shader.uniforms.cameraPos.value = camera.position;
 
     if (trex) {
-        trex.rotation.y = mx
-        trex.rotation.x = my
+        if(!inGame)
+            {
+                trex.rotation.y = mx
+                trex.rotation.x = my
 
-        if (talking) {
-            let fq = 100;
-            let amp = 0.25;
-            // trex.scale.set(2, 2+Math.cos(timer*fq)*amp,2);
+                if (talking) {
+                    let fq = 100;
+                    let amp = 0.25;
+                    // trex.scale.set(2, 2+Math.cos(timer*fq)*amp,2);
 
-            trex.rotation.x = my + Math.cos(timer*fq)*amp;
+                    trex.rotation.x = my + Math.cos(timer*fq)*amp;
+                }
         }
+        else {
+            
+                velocityY += gravity;
+                trex.position.y += velocityY;
+
+                if (trex.position.y <= 0) {
+                    trex.position.y = 0;
+                    velocityY = 0;
+                    isOnGround = true;
+                }
+
+                cactus.position.x += velocityX
+
+                if(cactus.position.x < limitX)
+                {
+                    cactus.position.x = -limitX
+                    velocityX += 0.1
+                }
+
+                trex.rotation.x = 0;
+                trex.rotation.y = Math.PI / 2;
+                trex.rotation.z = 0;
+            }
+
+
     }
 
     renderer.render( scene, camera );
+}
+
+export function game(){
+    canvas.classList.toggle("fullscreen")
+    trex.position.set(-150, 0, 0)
+    trex.scale.set(0.5,0.5,0.5);
+    inGame = true
 }
