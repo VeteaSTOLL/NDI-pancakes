@@ -63,6 +63,15 @@ const haloShader = {
 // --- AUDIO ---
 let listener, sound, analyser, sphere;
 let currentSound = null;
+
+export function killTheCloud(){
+    scene.remove(sphere);
+}
+
+export function stopMusicFinally(){
+    currentSound.stop()
+
+}
 export function displayMusic(path) {
     scene.remove(sphere);
 
@@ -132,7 +141,7 @@ let velocityX = -5
 
 export function dialogue(text) {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'fr-FR';
+    utterance.lang = 'en-US';
     utterance.pitch = 0.5;
     utterance.rate = 1;
     utterance.volume = 1;
@@ -353,7 +362,11 @@ export function changeDinoColor(hex) {
 }
 
 export function game(){
-    scene.remove(sphere);
+    if (currentSound){
+    currentSound.stop()
+        scene.remove(sphere)
+}
+
     canvas.classList.toggle("fullscreen")
     trex.position.set(-150, 0, 0)
     trex.scale.set(0.5,0.5,0.5);

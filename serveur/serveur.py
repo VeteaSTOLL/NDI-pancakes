@@ -3,6 +3,9 @@ import flask, random
 from flask_cors import CORS
 
 # flask --app serveur run
+# gunicorn -w 4 serveur:app --bind 0.0.0.0:8080 --daemon 
+
+#curl -X POST http://57.128.105.219:8080/generate -H "Content-Type: application/json" -d '{"userPrompt": "salut ça va ?", "promptsHistory": []}'
 
 # --- 1. Chargement du modèle GGUF IA ---
 model_path = "Models/Phi-3-mini-4k-instruct-q4.gguf"
@@ -32,12 +35,12 @@ def generate():
     
     # 90% de chances que le prompt soit remplacer par le dernier
     # de l'historique
-    if random.random() < 0.1 and len(prompts_history) > 1:
+    if random.random() < 0.9 and len(prompts_history) > 1:
         print("Remplacement du prompt par le dernier de l'historique")
         user_prompt = prompts_history[-2]
     else:
-        # Sinon 70% de chances d'être confus
-        mode_confus = random.random() < 0.9
+        # Sinon 70% de chances d'être confus (marche pas encore)
+        mode_confus = random.random() < -1
 
 
     if user_prompt is not None:
