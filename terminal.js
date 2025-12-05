@@ -143,7 +143,8 @@ function handleCommand(cmd) {
     cmdNi();
 
   } else if (cmd.match(/music/)) {
-    displayMusic("res/alone.mp3");
+    // Musique : "On & On" par Cartoon [NCS Release]
+    displayMusic("res/onAndOn.mp3");
   }else if (cmd.match(/R/)) {
     cmdR();
 
