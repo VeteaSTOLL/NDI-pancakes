@@ -256,15 +256,37 @@ function cmdD(){
 }
 
 function formatHelp() {
-  return "\r\nAvailable commands:\r\n" +
-   " - help : show this message\r\n" +
-   " - clear : clear the terminal\r\n" +
-   " - music : play some music\r\n" +
-   " - color [a-f]: changes the color [green, lightBlue, white-ish, mauve, red, gold]\r\n" +
-   " - Ni\r\n" +
-   " - R\r\n" +
-   " - D\r\n" +
-   " - hubert : better than ChatGPT\r\n"
+  return (
+    "\r\nAvailable commands:\r\n" +
+    "\r\n=== System Commands ===\r\n" +
+    " - help            : show this message\r\n" +
+    " - clear           : clear the terminal\r\n" +
+    " - reload          : reload the application\r\n" +
+    " - neofetch        : display terminal identity\r\n" +
+    " - color [a-f]     : change the terminal color\r\n" +
+    "         a = green\r\n" +
+    "         b = light blue\r\n" +
+    "         c = white-ish\r\n" +
+    "         d = mauve\r\n" +
+    "         e = red\r\n" +
+    "         f = gold\r\n" +
+
+    "\r\n=== Music Commands ===\r\n" +
+    " - music           : play the current music\r\n" +
+    " - next            : play the next track\r\n" +
+
+    "\r\n=== NIRD Commands ===\r\n" +
+    " - Ni              : Inclusive Computer Science\r\n" +
+    " - R               : Responsible Technology\r\n" +
+    " - D               : Durability\r\n" +
+
+    "\r\n=== Fun Commands ===\r\n" +
+    " - game            : start the mini-game (Space to jump)\r\n" +
+
+    "\r\n=== AI Mode ===\r\n" +
+    " - hubert          : enter Hubert AI mode\r\n" +
+    " - exit            : exit Hubert AI mode\r\n"
+  );
 }
 
 function handleCommandHubert(cmd) {
