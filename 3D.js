@@ -61,22 +61,29 @@ const haloShader = {
 
 // --- AUDIO ---
 let listener, sound, analyser, sphere;
-
+let currentSound = null;
 export function displayMusic(path) {
+    scene.remove(sphere);
+
+    
+    if (currentSound) {
+        currentSound.stop(); 
+    }
+
     listener = new THREE.AudioListener();
     camera.add(listener);
 
-    sound = new THREE.Audio(listener);
+    currentSound = new THREE.Audio(listener);
 
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load(path, function(buffer) {
-        sound.setBuffer(buffer);
-        sound.setLoop(true);
-        sound.setVolume(0.5);
-        sound.play();
+        currentSound.setBuffer(buffer);
+        currentSound.setLoop(true);
+        currentSound.setVolume(0.5);
+        currentSound.play();
     });
 
-    analyser = new THREE.AudioAnalyser(sound, 64);
+    analyser = new THREE.AudioAnalyser(currentSound, 64);
 
     const geo = new THREE.IcosahedronGeometry(100, 100);
     mat = new THREE.ShaderMaterial({
@@ -92,6 +99,7 @@ export function displayMusic(path) {
     sphere.position.set(0, 0, -200);
     scene.add(sphere);
 }
+
 
 // --- DINO T-REX ---
 let talking = false;

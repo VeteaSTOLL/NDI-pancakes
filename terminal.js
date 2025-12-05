@@ -6,7 +6,30 @@ const TerminalStates = {
   HUBERT: "hubert"
 };
 
+const musicPlayer =[
+   "res/onAndOn.mp3",
+   "res/unity.mp3"
 
+
+];
+
+let currentIndex = 0;
+let currentAudio = null;
+
+
+function playMusic(index) {
+  // Stopper l'audio en cours si il y en a un
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+
+  // Créer un nouvel audio
+  currentAudio = new Audio(musicPlayer[index]);
+  currentAudio.play();
+
+  writeAndTTS(`Playing: ${musicPlayer[index].split("/").pop()}`);
+}
 // Create terminal
 export const term = new Terminal({
   cursorBlink: true,
@@ -139,13 +162,25 @@ function handleCommand(cmd) {
   } else if (cmd.match(/clear/)) {
     term.clear();
 
-  } else if (cmd.match(/Ni/)) {
+
+
+
+  }else if (cmd.match(/next/)) {
+    currentIndex = (currentIndex + 1) % musicPlayer.length;
+    displayMusic(musicPlayer[currentIndex]);
+}
+  
+  
+  
+  
+  
+  
+  else if (cmd.match(/Ni/)) {
     cmdNi();
 
   } else if (cmd.match(/music/)) {
-    // Musique : "On & On" par Cartoon [NCS Release]
-    displayMusic("res/unity.mp3");
-  }else if (cmd.match(/R/)) {
+    displayMusic(musicPlayer[currentIndex]);
+} else if (cmd.match(/R/)) {
     cmdR();
 
   } else if (cmd.match(/D/)){
