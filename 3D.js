@@ -362,8 +362,12 @@ export function changeDinoColor(hex) {
 }
 
 export function game(){
-    scene.remove(sphere);
-    currentSound.stop(); 
+    if (sphere){scene.remove(sphere);
+        
+    }
+    
+    else if(currentSound){
+    currentSound.stop();} 
 
     canvas.classList.toggle("fullscreen")
     trex.position.set(-150, 0, 0)
