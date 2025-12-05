@@ -6,100 +6,92 @@ let camera, scene, renderer;
 let distance = 300;
 let trex;
 
+// --- AUDIO ---
+let listener, sound, analyser, sphere;
+
+export function displayMusic(path) {
+    listener = new THREE.AudioListener();
+    camera.add(listener);
+
+    sound = new THREE.Audio(listener);
+
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load(path, function(buffer) {
+        sound.setBuffer(buffer);
+        sound.setLoop(true);
+        sound.setVolume(0.5);
+        sound.play();
+    });
+
+    analyser = new THREE.AudioAnalyser(sound, 64);
+
+    // Sphere pour visualisation
+    const geo = new THREE.IcosahedronGeometry(100, 100);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xff5500, wireframe: true });
+    sphere = new THREE.Mesh(geo, mat);
+    sphere.position.set(0, 0, -200);
+    scene.add(sphere);
+}
+
+// --- DINO T-REX ---
 let talking = false;
 
 export function dialogue(text) {
-
     const utterance = new SpeechSynthesisUtterance(text);
-
-    utterance.lang = 'fr-FR'; // Langue française
-    utterance.pitch = 0.5;      // Hauteur de la voix (0 à 2)
-    utterance.rate = 1;       // Vitesse de lecture (0.1 à 10)
-    utterance.volume = 1;     // Volume (0 à 1)
-
-    utterance.onstart = () => {
-        talking = true;
-    };
-    utterance.onend = () => {
-        talking = false;
-    };
-
+    utterance.lang = 'fr-FR';
+    utterance.pitch = 0.5;
+    utterance.rate = 1;
+    utterance.volume = 1;
+    utterance.onstart = () => { talking = true; };
+    utterance.onend = () => { talking = false; };
     window.speechSynthesis.speak(utterance);
 }
 
-let mx;
-let my;
-
+// --- MOUSE ---
+let mx, my;
 document.addEventListener("mousemove", (event) => {
     const rect = canvas.getBoundingClientRect();
-
-    // Centre de l'élément
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-
-    // Position relative au centre
-    const x = event.clientX - centerX;
-    const y = event.clientY - centerY;
-
-    // Normalisation par la taille de l'écran
-    mx = x / window.innerWidth;
-    my = y / window.innerHeight;
+    mx = (event.clientX - centerX) / window.innerWidth;
+    my = (event.clientY - centerY) / window.innerHeight;
 });
 
-
+// --- INIT / ANIMATE ---
 init();
 animate();
 
 function init() {
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
-    camera.position.y = 20;
-    camera.position.z = distance;
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
+    camera.position.set(0, 20, distance);
 
     scene = new THREE.Scene();
-    
+
     const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(10, 10, 10);
+    light.position.set(10,10,10);
     scene.add(light);
 
-    const amb_light = new THREE.AmbientLight( 0x555555 );
-    scene.add( amb_light );
-    
-    new OBJLoader().load(
-        'res/T-rex.obj',
-        function ( obj ) {					
-            obj.traverse(function (child) {
-                if (child.isMesh) {
-                    let geometry = child.geometry;
-                    geometry.rotateX(-Math.PI / 2);
-                    trex = new THREE.Mesh( child.geometry, new THREE.MeshStandardMaterial({
-                        color: 0x55ff55,
-                        roughness: 0,
-                        metalness: 0.5,
+    const amb = new THREE.AmbientLight(0x555555);
+    scene.add(amb);
+
+    new OBJLoader().load('res/T-rex.obj',
+        function(obj) {
+            obj.traverse(function(child) {
+                if(child.isMesh) {
+                    child.geometry.rotateX(-Math.PI/2);
+                    trex = new THREE.Mesh(child.geometry, new THREE.MeshStandardMaterial({
+                        color: 0x55ff55, roughness:0, metalness:0.5
                     }));
-                    trex.position.set(0, 0, 0)
                     trex.scale.set(2,2,2);
-                    scene.add( trex ); 
+                    scene.add(trex);
                 }
             });
-            
-        },
-        function ( xhr ) {
-            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-        },
-        function ( error ) {
-            console.log( 'An error happened' );
         }
     );
 
-
-    renderer = new THREE.WebGLRenderer( { canvas, alpha:true, antialias: true } );
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-
+    renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-
     renderer.setPixelRatio(window.devicePixelRatio);
-
 
     window.addEventListener('resize', onWindowResize);
 }
@@ -111,29 +103,25 @@ function onWindowResize() {
 }
 
 function animate() {
-    requestAnimationFrame( animate );
+    requestAnimationFrame(animate);
     render();
 }
 
-function render() {		
-    const timer = (Date.now() * 0.0003);
-    // camera.position.x = Math.cos( timer ) * distance;
-    // camera.position.z = Math.sin( timer ) * distance;
-    // camera.lookAt( scene.position );
-    // shader.uniforms.cameraPos.value = camera.position;
+function render() {
+    const timer = Date.now()*0.0003;
 
-    if (trex) {
-        trex.rotation.y = mx
-        trex.rotation.x = my
-
-        if (talking) {
-            let fq = 100;
-            let amp = 0.25;
-            // trex.scale.set(2, 2+Math.cos(timer*fq)*amp,2);
-
-            trex.rotation.x = my + Math.cos(timer*fq)*amp;
-        }
+    if(trex) {
+        trex.rotation.y = mx;
+        trex.rotation.x = my;
+        if(talking) trex.rotation.x = my + Math.cos(timer*100)*0.25;
     }
 
-    renderer.render( scene, camera );
+    // Animation audio
+    if(analyser && sphere) {
+        const freq = analyser.getAverageFrequency();
+        const scale = 1 + freq/128; // Ajuste amplitude
+        sphere.scale.set(scale, scale, scale);
+    }
+
+    renderer.render(scene, camera);
 }
