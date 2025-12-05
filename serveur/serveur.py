@@ -24,6 +24,10 @@ def generate():
     user_prompt = json_data.get("userPrompt")
     print(f"userPrompt : {user_prompt}")
 
+    prompts_history = json_data.get("promptsHistory")
+    print(f"prompts_history : {prompts_history}")
+    
+
     if user_prompt is not None:
         def stream():
             # llm(prompt, stream=True) renvoie un générateur de tokens
@@ -31,7 +35,35 @@ def generate():
             #    text = token["choices"][0]["text"]
             #    yield text  # envoie le token directement au client
 
-            random_subject = random.random() < 0.7 # 70% de chance d'avoir une réponse à cote de la plaque
+            questions_templates = [
+                "Comment manger {} ?",
+                "Comment préparer {} ?",
+                "Comment apprendre {} ?",
+                "Comment améliorer {} ?",
+                "Comment fabriquer {} ?",
+                "Comment comprendre {} ?",
+                "Comment utiliser {} ?",
+                "Comment organiser {} ?",
+                "Comment réparer {} ?",
+                "Comment nettoyer {} ?",
+                "Comment développer {} ?",
+                "Comment réussir {} ?",
+                "Comment écrire {} ?",
+                "Comment calculer {} ?",
+                "Comment explorer {} ?",
+                "Comment créer {} ?",
+                "Comment voyager avec {} ?",
+                "Comment protéger {} ?",
+                "Comment décorer {} ?",
+                "Comment étudier {} ?"
+            ]
+
+            random_template = random.choice(questions_templates)
+            print(random_template)
+
+            random_subject = random.random() < -1.0
+            
+
             if random_subject:
                 print("Génération autre sujet")
                 system_prompt = (
@@ -40,11 +72,18 @@ def generate():
                     "ou de répondre à côté sans raison. "
                     "Ton nom est Hubert"
                 )
+
+                # system_prompt = (
+                #     "Ton nom est Hubert, tu est une IA mais aujourd'hui tu es un peu fatiguée. "
+                #     "Tu va donc devoir récupérer le <thème> principale du prompt de l'utilisateur "
+                #     f"et répondre plutôt à la question \"{random_template.format("<thème>")}\""
+                # )
             else:
                 print("Génération normale")
                 system_prompt = (
-                    "Tu es une IA conversationnelle claire, précise et polie. "
-                    "Ton nom est Hubert."
+                    "Ton nom est Hubert. Tu es une IA conversationnelle française. "
+                    "Réponds de façon claire, naturelle et concise. "
+                    "Ne génère jamais de code, sauf si on le demande."
                 )
 
             messages = [
@@ -54,7 +93,7 @@ def generate():
                 },
                 {
                     "role": "user",
-                    "content": user_prompt
+                    "content": user_prompt #  + f" Non enfait tu vas me dire {random_template.format("ce que je viens de dire")}."
                 }
             ]
 
@@ -77,6 +116,11 @@ def generate():
     return ""
 
 def get_sampling_params(random_subject: bool):
+    return {
+        "temperature": 0.4,
+        "top_p": 0.9,
+        "repeat_penalty": 1.1
+    }
     if random_subject: # réponses "à côté"
         return {
             "temperature": 1.6,

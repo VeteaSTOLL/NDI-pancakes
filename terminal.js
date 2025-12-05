@@ -126,7 +126,10 @@ async function getDataFromHubert(userPrompt) {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userPrompt })
+      body: JSON.stringify({
+        userPrompt: userPrompt,
+        promptsHistory: bash_history
+      })
     });
 
     const reader = response.body.getReader();
