@@ -197,5 +197,9 @@ function render() {
         mat.uniforms.off.value += dt * scale * 10;
     }
 
-    renderer.render(scene, camera);
+    renderer.render( scene, camera );
+}
+
+export function changeDinoColor(hex) {
+    if (trex) trex.material.color.set(hex);
 }

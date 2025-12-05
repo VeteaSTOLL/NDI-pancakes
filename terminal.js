@@ -1,4 +1,5 @@
 import { dialogue, displayMusic } from "3D";
+import { changeColor, termInitText, displayTermName } from "./terminalColors.js";
 
 const TerminalStates = {
   DEFAULT: "",
